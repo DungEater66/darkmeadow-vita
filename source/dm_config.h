@@ -7,7 +7,7 @@
 
 /* Identity (from AndroidManifest.xml). The expansion files are named main/patch.<VERSION_CODE>.<PACKAGE>.obb */
 /* Shown in log.txt at start, so it is clear which loader build produced a log. Bump on every change. */
-#define DM_LOADER_BUILD "r73 (2026-10-29, English only again; saves written in the background; optional thread pinning; build guide (BUILD.md) and .gitignore for GitHub)"
+#define DM_LOADER_BUILD "r74 (2026-10-29, back-to-back garbage collections skipped)"
 
 #define DM_PACKAGE_NAME  "com.phosphorgames.DarkMeadow"
 #define DM_VERSION_CODE  69

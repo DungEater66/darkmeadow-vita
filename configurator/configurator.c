@@ -96,6 +96,7 @@ static item_t items[] = {
 
     { T_HEADER, NULL, "Performance" },
     { T_BOOL, "DM_SAVE_BEHIND", "Save in the background", "Saves are written to the memory card by a background thread instead of freezing the game (about 70 ms per write). Off: the game waits for each write.", 1 },
+    { T_BOOL, "DM_GC_SKIP_REPEAT", "Skip repeated clean-ups", "Skip a garbage collection that comes less than 2 s after the last one (30-70 ms stutters, mostly as fights end). Level changes always clean up.", 1 },
     { T_BOOL, "DM_PIN_THREADS", "Pin threads to cores", "Experimental. Game thread alone on core 0, rendering on core 1, everything else on cores 1-2, instead of letting the system move them.", 0 },
 
     { T_HEADER, NULL, "Loading" },

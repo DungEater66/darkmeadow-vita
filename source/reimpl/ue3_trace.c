@@ -277,9 +277,26 @@ static void h_Flush(uint32_t a, uint32_t b) {
 }
 
 static void (*o_GC)(uint64_t, unsigned);
+/* r74: a normal garbage collection less than 2 s after the last one is skipped (DM_GC_SKIP_REPEAT, on by
+ * default). r71: 36 of 130 ran under a second after the previous one - mostly as a fight ended and during the summary -
+ * each 30-69 ms of frozen game for next to nothing (the previous pass had just freed what there was). Skipping only
+ * frees the memory later: the next pass collects it. Never two skips in a row, and full purges (level changes, which
+ * unload areas) always run. */
+int dm_gc_skip_repeat = 1;
+static uint64_t gc_last_end;
+static int gc_skipped_last;
 static void h_GC(uint64_t keep, unsigned purge) {
     uint64_t t0 = now_us();
+    if (dm_gc_skip_repeat && !purge && !gc_skipped_last && gc_last_end && t0 - gc_last_end < 2000000ull) {
+        gc_skipped_last = 1;
+        static unsigned n;
+        if (n++ < 200) l_info("[hitch] CollectGarbage skipped: %u ms after the last one (%u skipped so far)",
+                              (unsigned)((t0 - gc_last_end) / 1000), n);
+        return;
+    }
+    gc_skipped_last = 0;
     o_GC(keep, purge);
+    gc_last_end = now_us();
     hitch("CollectGarbage", purge ? "(full purge)" : NULL, t0);
 }
 

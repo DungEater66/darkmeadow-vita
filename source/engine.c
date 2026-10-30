@@ -28,6 +28,7 @@
 #include "reimpl/pkg_cache.h"
 #include "reimpl/save_behind.h"
 extern int dm_pin_threads;   /* utils/watchdog.c (r73) */
+extern int dm_gc_skip_repeat;   /* reimpl/ue3_trace.c (r74) */
 #include "reimpl/tex_cache.h"
 #include "reimpl/tex_prefetch.h"
 #include "reimpl/io_stats.h"
@@ -167,6 +168,7 @@ void engine_start(void) {
             else if (!strcmp(k, "DM_TEXTURE_PREFETCH")) prefetch_on = atoi(v) != 0;
             else if (!strcmp(k, "DM_PACKAGE_PREFETCH")) pkgpf_on = atoi(v) != 0;
             else if (!strcmp(k, "DM_PIN_THREADS")) dm_pin_threads = atoi(v) != 0;   /* r73 */
+            else if (!strcmp(k, "DM_GC_SKIP_REPEAT")) dm_gc_skip_repeat = atoi(v) != 0;   /* r74 */
             else if (!strcmp(k, "DM_SAVE_BEHIND")) save_behind_set(atoi(v) != 0);  /* r73 */
             else if (!strcmp(k, "DM_PACKAGE_PREFETCH_MB")) pkgpf_mb = atoi(v);
             else if (!strcmp(k, "DM_OBB_KEEP_OPEN")) io_set_keep_obb_open(atoi(v) != 0);
