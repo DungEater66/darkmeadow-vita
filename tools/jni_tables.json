@@ -1,0 +1,493 @@
+{
+ "class": "com/Phosphor/Engine/BaseUE3JavaApp",
+ "natives": [
+  {
+   "name": "NativeCallback_KeyPadChange",
+   "sig": "(Z)V",
+   "fn_offset": 19812464
+  },
+  {
+   "name": "NativeCallback_InitEGLCallback",
+   "sig": "()Z",
+   "fn_offset": 19902544
+  },
+  {
+   "name": "NativeCallback_Initialize",
+   "sig": "(IIFZ)Z",
+   "fn_offset": 19825828
+  },
+  {
+   "name": "NativeCallback_InitModel",
+   "sig": "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+   "fn_offset": 19858024
+  },
+  {
+   "name": "NativeCallback_InitZipVFS",
+   "sig": "(Z)V",
+   "fn_offset": 19812228
+  },
+  {
+   "name": "NativeCallback_PostInitUpdate",
+   "sig": "(II)V",
+   "fn_offset": 19812260
+  },
+  {
+   "name": "NativeCallback_Cleanup",
+   "sig": "()V",
+   "fn_offset": 19825688
+  },
+  {
+   "name": "NativeCallback_KeyboardFinished",
+   "sig": "(Ljava/lang/String;)V",
+   "fn_offset": 19859124
+  },
+  {
+   "name": "NativeCallback_MovieFinished",
+   "sig": "()V",
+   "fn_offset": 19861720
+  },
+  {
+   "name": "NativeCallback_SystemStats",
+   "sig": "(JI)Z",
+   "fn_offset": 19812296
+  },
+  {
+   "name": "NativeCallback_InterruptionChanged",
+   "sig": "(Z)Z",
+   "fn_offset": 19830392
+  },
+  {
+   "name": "NativeCallback_NetworkUpdate",
+   "sig": "(ZZ)V",
+   "fn_offset": 19812404
+  },
+  {
+   "name": "NativeCallback_LanguageSet",
+   "sig": "(Ljava/lang/String;)V",
+   "fn_offset": 19858768
+  },
+  {
+   "name": "NativeCallback_InputEvent",
+   "sig": "(IIIIJ)Z",
+   "fn_offset": 19847056
+  },
+  {
+   "name": "NativeCallback_IsTegra2Device",
+   "sig": "()Z",
+   "fn_offset": 19861380
+  },
+  {
+   "name": "NativeCallback_IsTegra3Device",
+   "sig": "()Z",
+   "fn_offset": 19861316
+  },
+  {
+   "name": "NativeCallback_IsTegra4Device",
+   "sig": "()Z",
+   "fn_offset": 19861252
+  },
+  {
+   "name": "NativeCallback_IsSupportedSamsungDevice",
+   "sig": "()Z",
+   "fn_offset": 19812108
+  },
+  {
+   "name": "NativeCallback_IsSupportedMotorolaDevice",
+   "sig": "()Z",
+   "fn_offset": 19812136
+  },
+  {
+   "name": "NativeCallback_IsSupportedLGDevice",
+   "sig": "()Z",
+   "fn_offset": 19812164
+  },
+  {
+   "name": "NativeCallback_IsSupportedAmazonDevice",
+   "sig": "()Z",
+   "fn_offset": 19812192
+  },
+  {
+   "name": "NativeCallback_ReceivedNewAccount",
+   "sig": "(Ljava/lang/String;)V",
+   "fn_offset": 19888952
+  },
+  {
+   "name": "NativeCallback_KeyEvent",
+   "sig": "(IIILandroid/view/KeyEvent;)Z",
+   "fn_offset": 19848984
+  },
+  {
+   "name": "NativeCallback_GetGraphicsPath",
+   "sig": "()Ljava/lang/String;",
+   "fn_offset": 19853316
+  },
+  {
+   "name": "NativeCallback_TapjoyGetUpdatePoints",
+   "sig": "(Ljava/lang/String;I)V",
+   "fn_offset": 19867248
+  },
+  {
+   "name": "NativeCallback_TapjoyGetUpdatePointsFailed",
+   "sig": "(Ljava/lang/String;)V",
+   "fn_offset": 19863760
+  },
+  {
+   "name": "NativeCallback_TapjoyGetSpendPointsResponse",
+   "sig": "(Ljava/lang/String;I)V",
+   "fn_offset": 19866744
+  },
+  {
+   "name": "NativeCallback_TapjoyGetSpendPointsResponseFailed",
+   "sig": "(Ljava/lang/String;)V",
+   "fn_offset": 19862272
+  },
+  {
+   "name": "NativeCallback_TapjoyGetDisplayAdResponse",
+   "sig": "()V",
+   "fn_offset": 19820828
+  },
+  {
+   "name": "NativeCallback_TapjoyGetDisplayAdResponseFailed",
+   "sig": "(Ljava/lang/String;)V",
+   "fn_offset": 19864752
+  },
+  {
+   "name": "NativeCallback_TapjoyGetAwardPointsResponse",
+   "sig": "(Ljava/lang/String;I)V",
+   "fn_offset": 19866240
+  },
+  {
+   "name": "NativeCallback_TapjoyGetAwardPointsResponseFailed",
+   "sig": "(Ljava/lang/String;)V",
+   "fn_offset": 19864256
+  },
+  {
+   "name": "NativeCallback_TapjoyEarnedTapPoints",
+   "sig": "(I)V",
+   "fn_offset": 19861992
+  },
+  {
+   "name": "NativeCallback_TapjoyVideoReady",
+   "sig": "()V",
+   "fn_offset": 19820804
+  },
+  {
+   "name": "NativeCallback_TapjoyVideoError",
+   "sig": "(Ljava/lang/String;)V",
+   "fn_offset": 19863264
+  },
+  {
+   "name": "NativeCallback_TapjoyVideoComplete",
+   "sig": "()V",
+   "fn_offset": 19820780
+  },
+  {
+   "name": "NativeCallback_AndroidIAPPurchaseSucceeded",
+   "sig": "(Ljava/lang/String;)V",
+   "fn_offset": 19862768
+  },
+  {
+   "name": "NativeCallback_AndroidIAPPurchaseRestored",
+   "sig": "(Ljava/lang/String;)V",
+   "fn_offset": 19865744
+  },
+  {
+   "name": "NativeCallback_AndroidIAPPurchaseCanceled",
+   "sig": "(Ljava/lang/String;)V",
+   "fn_offset": 19865248
+  },
+  {
+   "name": "NativeCallback_AndroidIAPPurchaseFailed",
+   "sig": "(Ljava/lang/String;Ljava/lang/String;)V",
+   "fn_offset": 19859476
+  }
+ ],
+ "callbacks": [
+  {
+   "name": "JavaCallback_swapBuffers",
+   "sig": "()Z"
+  },
+  {
+   "name": "JavaCallback_makeCurrent",
+   "sig": "()Z"
+  },
+  {
+   "name": "JavaCallback_unMakeCurrent",
+   "sig": "()Z"
+  },
+  {
+   "name": "JavaCallback_initEGL",
+   "sig": "(Lcom/Phosphor/Engine/BaseUE3JavaApp$EGLConfigParms;)Z"
+  },
+  {
+   "name": "JavaCallback_reinitEGL",
+   "sig": "()Z"
+  },
+  {
+   "name": "JavaCallback_SetFixedSizeScale",
+   "sig": "(F)V"
+  },
+  {
+   "name": "JavaCallback_StartVideo",
+   "sig": "(Ljava/lang/String;)V"
+  },
+  {
+   "name": "JavaCallback_StopVideo",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_IsVideoPlaying",
+   "sig": "()Z"
+  },
+  {
+   "name": "JavaCallback_ShowKeyBoard",
+   "sig": "(Ljava/lang/String;FFFF)V"
+  },
+  {
+   "name": "JavaCallback_HideKeyBoard",
+   "sig": "(Z)V"
+  },
+  {
+   "name": "JavaCallback_ShowWebPage",
+   "sig": "(Ljava/lang/String;)V"
+  },
+  {
+   "name": "JavaCallback_LaunchSupportEmail",
+   "sig": "(Ljava/lang/String;)V"
+  },
+  {
+   "name": "JavaCallback_MinimizeApp",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_ShutDownApp",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_HasAppLocalValue",
+   "sig": "(Ljava/lang/String;)Z"
+  },
+  {
+   "name": "JavaCallback_GetAppLocalValue",
+   "sig": "(Ljava/lang/String;)Ljava/lang/String;"
+  },
+  {
+   "name": "JavaCallback_SetAppLocalValue",
+   "sig": "(Ljava/lang/String;Ljava/lang/String;)V"
+  },
+  {
+   "name": "JavaCallback_ShowSplash",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_HideSplash",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_StartSavegame",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_EndSavegame",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_TapjoyConnect",
+   "sig": "(Ljava/lang/String;Ljava/lang/String;)V"
+  },
+  {
+   "name": "JavaCallback_TapjoyShowOffers",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_TapjoySetBannerSize",
+   "sig": "(Ljava/lang/String;)V"
+  },
+  {
+   "name": "JavaCallback_TapjoyShowBannerAd",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_TapjoyHideBannerAd",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_TapjoyGetTapPoints",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_TapjoySpendTapPoints",
+   "sig": "(I)V"
+  },
+  {
+   "name": "JavaCallback_TapjoyAwardTapPoints",
+   "sig": "(I)V"
+  },
+  {
+   "name": "JavaCallback_FlurryOnStartSession",
+   "sig": "(Ljava/lang/String;)V"
+  },
+  {
+   "name": "JavaCallback_FlurryOnEndSession",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_FlurrySetContinueSessionMillis",
+   "sig": "(J)V"
+  },
+  {
+   "name": "JavaCallback_FlurryLogEvent",
+   "sig": "(Ljava/lang/String;)V"
+  },
+  {
+   "name": "JavaCallback_FlurryLogEventTimed",
+   "sig": "(Ljava/lang/String;Z)V"
+  },
+  {
+   "name": "JavaCallback_FlurryOnError",
+   "sig": "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+  },
+  {
+   "name": "JavaCallback_FlurryOnPageView",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_FlurrySetLogEnabled",
+   "sig": "(Z)V"
+  },
+  {
+   "name": "JavaCallback_FlurrySetUseHttps",
+   "sig": "(Z)V"
+  },
+  {
+   "name": "JavaCallback_FlurrySetUserID",
+   "sig": "(Ljava/lang/String;)V"
+  },
+  {
+   "name": "JavaCallback_FlurrySetAge",
+   "sig": "(I)V"
+  },
+  {
+   "name": "JavaCallback_FlurrySetGender",
+   "sig": "(B)V"
+  },
+  {
+   "name": "JavaCallback_AndroidIAPIsBillingSupported",
+   "sig": "()Z"
+  },
+  {
+   "name": "JavaCallback_AndroidIAPRequestPurchase",
+   "sig": "(Ljava/lang/String;)V"
+  },
+  {
+   "name": "JavaCallback_AndroidIAPRestoreTransactions",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_AndroidIAPGetPurchaseInformation",
+   "sig": "([Ljava/lang/String;)V"
+  },
+  {
+   "name": "JavaCallback_AndroidIAPConfirmTransaction",
+   "sig": "([Ljava/lang/String;)V"
+  },
+  {
+   "name": "JavaCallback_AndroidIAPRestoreTransactionInformation",
+   "sig": "(J)V"
+  },
+  {
+   "name": "JavaCallback_GetAvailableAccounts",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_GetJavaDate",
+   "sig": "()Ljava/lang/String;"
+  },
+  {
+   "name": "JavaCallback_GetCurrentAccessCode",
+   "sig": "()Ljava/lang/String;"
+  },
+  {
+   "name": "JavaCallback_PlaySong",
+   "sig": "(Ljava/lang/String;Z)V"
+  },
+  {
+   "name": "JavaCallback_StopSong",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_SetSongBaseVolume",
+   "sig": "(F)V"
+  },
+  {
+   "name": "JavaCallback_SetSongFadeValues",
+   "sig": "(FF)V"
+  },
+  {
+   "name": "JavaCallback_SetSongSoundClassVolume",
+   "sig": "(F)V"
+  },
+  {
+   "name": "JavaCallback_PauseSong",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_ResumeSong",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_UpdateMusicVolume",
+   "sig": "(F)V"
+  },
+  {
+   "name": "JavaCallback_SetFixedSizeScale",
+   "sig": "(F)V"
+  },
+  {
+   "name": "JavaCallback_ShowCloseDialog",
+   "sig": "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+  },
+  {
+   "name": "JavaCallback_ShowAds",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_HideAds",
+   "sig": "()V"
+  },
+  {
+   "name": "JavaCallback_GetExpansionFilename",
+   "sig": "(Z)Ljava/lang/String;"
+  },
+  {
+   "name": "JavaCallback_GetPackageName",
+   "sig": "()Ljava/lang/String;"
+  },
+  {
+   "name": "JavaCallback_GetCommandLineFilePath",
+   "sig": "()Ljava/lang/String;"
+  }
+ ],
+ "extra_callbacks": [
+  {
+   "name": "JavaCallback_LoadSoundFile",
+   "sig": "(Ljava/lang/String;)I"
+  },
+  {
+   "name": "JavaCallback_UnloadSoundID",
+   "sig": "(I)V"
+  },
+  {
+   "name": "JavaCallback_PlaySound",
+   "sig": "(IZ)I"
+  },
+  {
+   "name": "JavaCallback_StopSound",
+   "sig": "(I)V"
+  },
+  {
+   "name": "JavaCallback_SetVolume",
+   "sig": "(IF)V"
+  }
+ ]
+}

@@ -1,0 +1,7 @@
+Submodules fetched from GitHub (shallow clones of default branches) because the boilerplate's zip omitted them.
+The original .gitmodules did not record commits in the zip, so these are the heads at the time of fetching.
+
+falso_jni  https://github.com/v-atamanenko/FalsoJNI.git  083d5a07e025c6dfbb54ac68fd1acf696c23a86c
+so_util    https://github.com/Rinnegatamante/so_util.git  c4732373e33d808cd885dec3c2c75302cc4c739b
+falso_ndk  https://github.com/elliencode/FalsoNDK.git  6bf476b7d6f03abcbb8122f0b9646c48b426cb18
+vitagl     https://github.com/Rinnegatamante/vitaGL.git  dca4b9d143290d78ec043131a19be36c78cdc7b5
