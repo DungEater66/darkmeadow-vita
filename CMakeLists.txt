@@ -26,43 +26,6 @@ set(DATA_PATH "ux0:data/darkmeadow/") # Path to data (with trailing /)
 set(SO_PATH "${DATA_PATH}libUnrealEngine3.so") # Path to .so
 add_definitions(-DDATA_PATH="${DATA_PATH}" -DSO_PATH="${SO_PATH}")
 
-# Port type
-option(NDK_PORT "This should be on if the game is done with Android NDK (has an android_main entry point)" OFF)
-if (NDK_PORT)
-  add_definitions(-DNDK_PORT)
-endif()
-
-# OFF for Dark Meadow: the engine calls fopen() and then _fileno() on the result and reads with plain read()/lseek()/fstat().
-# With SceLibc IO, fopen/_fileno come from SceLibc while read/lseek come from newlib, which number descriptors differently.
-option(USE_SCELIBC_IO "Use SceLibcBridge for IO and some other std functions" OFF)
-if (USE_SCELIBC_IO)
-  add_definitions(-DUSE_SCELIBC_IO)
-endif()
-
-set(SHADER_FORMAT "GLSL") # Preferred shader format (one of 'GLSL', 'CG', 'GXP')
-if (${SHADER_FORMAT} STREQUAL "GLSL")
-  add_definitions(-DUSE_GLSL_SHADERS)
-elseif (${SHADER_FORMAT} STREQUAL "CG")
-  add_definitions(-DUSE_CG_SHADERS)
-elseif (${SHADER_FORMAT} STREQUAL "GXP")
-  add_definitions(-DUSE_GXP_SHADERS)
-else()
-  message(FATAL_ERROR "SHADER_FORMAT option can only be one of: 'GLSL', 'CG', 'GXP'")
-endif()
-
-set(valid_dump_formats GLSL CG)
-# OFF: the boilerplate's own cache calls vglGetShaderBinary right after glCompileShader. In the vitaGL used here
-# (VGL_MODE_POSTPONED), glCompileShader does nothing and the real compile happens in glLinkProgram, so that code wrote
-# empty .gxp files (and could crash). vitaGL's built-in cache (HAVE_SHADER_CACHE, see VITAGL_MAKE_FLAGS) is used instead.
-option(DUMP_COMPILED_SHADERS "When using GLSL or CG shader format, cache compiled shaders on disk" OFF)
-if (DUMP_COMPILED_SHADERS)
-  if (SHADER_FORMAT IN_LIST valid_dump_formats)
-    add_definitions(-DDUMP_COMPILED_SHADERS)
-  else()
-    message(WARNING "DUMP_COMPILED_SHADERS has no effect for the chosen shader format ${SHADER_FORMAT}")
-  endif()
-endif()
-
 # Build types:
 #   Debug   - full logging (debug lines too), -O1, vitaGL with its checks and error logging (TEST=1 LOG_ERRORS=1)
 #   Profile - optimised like Release (-O3, vitaGL NO_DEBUG) but keeps the log (info/warning/[cpu]/[gpu]/[mem] lines);
@@ -81,11 +44,6 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   #add_definitions(-DDEBUG_OPENGL)
   # Uncomment this for so_util logging:
   #add_definitions(-DSO_UTIL_VERBOSE=1)
-  # Uncomment this for verbose FalsoNDK logging (separate things):
-  #add_definitions(-DDEBUG_POLL_AND_WAKE=1)
-  #add_definitions(-DDEBUG_EPOLL=1)
-  #add_definitions(-DDEBUG_PIPEFD=1)
-  #add_definitions(-DDEBUG_CALLBACKS=1)
   # Space-separated flags passed to vitaGL
   set(VITAGL_MAKE_FLAGS "SOFTFP_ABI=1 TEST=1 LOG_ERRORS=1 HAVE_SHADER_CACHE=1")
 else()
@@ -108,70 +66,60 @@ else ()
 endif()
 
 set(SOURCES
+    source/android/dynlib.c
+    source/android/egl.c
+    source/android/engine.c
+    source/android/engine_natives.c
+    source/android/java_impl.c
+    source/android/java_tables.c
+    source/android/patch.c
+    source/audio/opensl.c
+    source/audio/song.c
+    source/config.c
+    source/gfx/gl_fixes.c
+    source/gfx/glutil.c
+    source/hooks/engine_log.c
+    source/hooks/game_state.c
+    source/hooks/hook.c
+    source/hooks/load_profiler.c
+    source/hooks/text_scale.c
+    source/input/overlay.c
+    source/input/padinput.c
+    source/input/touch.c
+    source/libc/bits/_ctype.c
+    source/libc/errno.c
+    source/libc/io.c
+    source/libc/log.c
+    source/libc/mem.c
+    source/libc/pthr.c
+    source/libc/sys.c
+    source/libc/time64.c
+    source/libc/ue3_compat.c
+    source/libc/ue3_stdio.c
     source/main.c
-    source/padinput.c
-    source/overlay.c
-    source/dynlib.c
-    source/engine.c
-    source/song.c
-    source/movie.c
-    source/engine_natives.c
-    source/java_impl.c
-    source/java_tables.c
-    source/patch.c
-    source/reimpl/bits/_ctype.c
-    source/reimpl/errno.c
-    source/reimpl/io.c
-    source/reimpl/save_behind.c
-    source/reimpl/log.c
-    source/reimpl/mem.c
-    source/reimpl/pthr.c
-    source/reimpl/sys.c
-    source/reimpl/time64.c
-    source/reimpl/ue3_compat.c
-    source/reimpl/ue3_stdio.c
-    source/reimpl/io_stats.c
-    source/reimpl/opensl.c
-    source/reimpl/obb_stream.c
-    source/reimpl/pkg_cache.c
-    source/reimpl/tex_cache.c
-    source/reimpl/tex_prefetch.c
-    source/reimpl/mem_valve.c
-    source/reimpl/ue3_trace.c
-    source/utils/crash.c
-    source/utils/watchdog.c
-    source/utils/dialog.c
-    source/utils/glutil.c
-    source/utils/gldiag.c
-    source/utils/pvrtc.c
-    source/utils/init.c
-    source/utils/logger.c
-    source/utils/settings.c
-    source/utils/utils.c
+    source/storage/io_stats.c
+    source/storage/mem_valve.c
+    source/storage/obb_stream.c
+    source/storage/pkg_cache.c
+    source/storage/pkg_prefetch.c
+    source/storage/save_behind.c
+    source/storage/tex_cache.c
+    source/storage/tex_prefetch.c
+    source/util/crash.c
+    source/util/fatal.c
+    source/util/init.c
+    source/util/logger.c
+    source/util/utils.c
+    source/util/watchdog.c
+    source/video/movie.c
     lib/falso_jni/FalsoJNI.c
     lib/falso_jni/FalsoJNI_ImplBridge.c
     lib/falso_jni/FalsoJNI_Logger.c
     lib/falso_jni/converter.c
-    lib/sha1/sha1.c
-    lib/fios/fios.c
-    lib/so_util/so_util.c)
-
-if(NOT NDK_PORT)
-list(APPEND SOURCES
-  source/reimpl/asset_manager.cpp
-  source/reimpl/controls.c
-  source/reimpl/controls.h)
-endif()
+    lib/so_util/so_util.c
+    )
 
 add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
-
-add_subdirectory(lib/libc_bridge)
-add_dependencies(${CMAKE_PROJECT_NAME} SceLibcBridge)
-
-if(NDK_PORT)
-  add_subdirectory(lib/falso_ndk)
-  add_dependencies(${CMAKE_PROJECT_NAME} FalsoNDK)
-endif()
 
 # VitaGL built from lib/vitagl via its own Makefile.
 # Made this way so that testing quick adjustments to VitaGL is possible,
@@ -219,24 +167,9 @@ target_include_directories(${CMAKE_PROJECT_NAME}
                            PUBLIC ${CMAKE_SOURCE_DIR}/source
                            )
 
-if(NDK_PORT)
-  target_link_libraries(${CMAKE_PROJECT_NAME}
-                        FalsoNDK
-                        )
-endif()
-
 target_link_libraries(${CMAKE_PROJECT_NAME}
                       -Wl,--whole-archive pthread -Wl,--no-whole-archive
-                      OpenSLES
-                      sndfile
-                      mp3lame
                       mpg123
-                      opus
-                      vorbis
-                      ogg
-                      vorbisenc
-                      vorbisfile
-                      FLAC
                       stdc++
                       vitaGL
                       vitashark
@@ -248,29 +181,24 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
                       ScePgf_stub
                       mathneon
                       kubridge_stub
-                      ${CMAKE_BINARY_DIR}/lib/libc_bridge/stubs/libSceLibcBridge_stub.a
                       SceHid_stub
                       SceTouch_stub
-                      SceMotion_stub
                       SceAppMgr_stub
                       SceAppUtil_stub
                       SceAudio_stub
-                      SceAudioIn_stub
                       SceCommonDialog_stub
                       SceDisplay_stub
                       SceKernelDmacMgr_stub
-                      SceFios2_stub
                       SceCtrl_stub
                       SceGxm_stub
                       ScePower_stub
-                      SceTouch_stub
                       SceVshBridge_stub
                       SceAvPlayer_stub
                       SceSysmodule_stub
                       )
 
-# Configurator (r61): the companion settings app, started from the "Settings" button on the LiveArea page
-# (source/utils/init.c runs app0:/configurator.bin when the game is launched with "-config").
+# Configurator: the companion settings app, started from the "Settings" button on the LiveArea page
+# (source/util/init.c runs app0:/configurator.bin when the game is launched with "-config").
 add_executable(configurator configurator/configurator.c)
 add_dependencies(configurator vitaGL_build)
 target_include_directories(configurator PRIVATE ${CMAKE_SOURCE_DIR}/configurator)

@@ -11,16 +11,13 @@ newest builds further down.
 
 ## What you need
 
-* VitaSDK-softfp (`VITASDK` set) with the packages the boilerplate links: OpenSLES, sndfile, mp3lame, mpg123,
-  opus, vorbis, ogg, vorbisenc, vorbisfile, FLAC, vitashark, SceShaccCgExt, mathneon.
+* VitaSDK-softfp (`VITASDK` set) with mpg123, zlib, vitashark, SceShaccCgExt and mathneon.
 * **A current kubridge**, both in the SDK and on the Vita (RWX memory, `kuKernelMemProtect`):
   * SDK: `grep -c kuKernelMemProtect "$VITASDK/arm-vita-eabi/include/kubridge.h"` must print 1 or more. If it prints 0,
     install upstream: `git clone https://github.com/bythos14/kubridge && cd kubridge && cmake -B build && cmake --build build && cmake --install build`
     (it installs `kubridge.h` and the stub libraries into the SDK).
   * Vita: install the matching `kubridge.skprx` from the same project. An older plugin does not export
     `kuKernelMemProtect` and the app will not start.
-  * `lib/kubridge/` in this tree is a stale copy from the boilerplate zip and is not used by the build (the code
-    includes `<kubridge.h>` from the SDK).
 * From the game (version code **69**):
   * `lib/armeabi-v7a/libUnrealEngine3.so` from the APK
   * the expansion files `main.69.com.phosphorgames.DarkMeadow.obb` and `patch.69.com.phosphorgames.DarkMeadow.obb`
@@ -681,6 +678,29 @@ as `[mem] engine malloc of N bytes failed: caches gave back K KB, retry succeede
 
 The `[io]` line adds `texture-data cache served N KB, holds H KB of L`.
 
+## r75: source cleaned up
+
+No change to what the game does; the source is reorganised so it reads as a whole:
+
+* **Folders by area**: `android/` (the activity, JNI, imports), `hooks/` (hooks into the engine), `libc/`,
+  `storage/` (files, caches, prefetch, saves), `audio/`, `video/`, `input/`, `gfx/`, `util/`. See "Source layout".
+* **One settings reader** (`config.c`): every module asks it, instead of each parsing `config.txt` itself.
+* **The one big hook file is split**: `hooks/engine_log.c`, `load_profiler.c`, `text_scale.c` and `game_state.c`, which
+  publishes what the game is doing as one `game_state` struct for the controls and the movie player.
+* **The package cache is split** into the cache (`pkg_cache.c`) and the prefetch (`pkg_prefetch.c`), sharing one zip
+  directory reader.
+* **Removed**: test and tuning switches (`DM_TEST_MOVIE`, `DM_STARTUP_MOVIE_HOLD`, `DM_RENDER_THREAD`, `DM_DEVICE_*`,
+  `DM_PACKAGE_CACHE*`, `DM_PACKAGE_PREFETCH_MB`, `DM_TEXTURE_CACHE_MB`, `DM_TEXTURE_PREFETCH`, `DM_OBB_KEEP_OPEN`,
+  `DM_OBB_READAHEAD`, `DM_DIR_CACHE`, `DM_SONG_ANDROID_CUTS`, `DM_TEXT_SCALE`, `DM_TEXT_TRACE`, `DM_PAD_GAMEPLAY_SCENES`,
+  `DM_SWIPE_*`, the per-button position keys); their values are now fixed at what every build since used. The settings
+  app's options are unchanged. Also removed: the shader and GL call diagnostics, the old settings and dialog code, the
+  PVRTC decoder, FalsoNDK, SceLibc IO, fios, SHA-1, the Android asset manager, all EGL functions but the two the engine
+  imports, ~480 import-table entries the engine never asks for (the table now lists exactly its imports plus its
+  OpenSL ES `dlsym` names), the libc wrappers only those entries used, and the unused OpenSL ES library and codecs from
+  the link.
+* Comments describe what the code does now; the build-by-build history stays here.
+* `config.h` and the old `dm_config.h` both used the include guard `DM_CONFIG_H`: fixed by the rename to `game_info.h`.
+
 ## r74: back-to-back garbage collections skipped
 
 r71's 54-minute log: 130 normal garbage collections (5.9 s; 30-69 ms each) and 7 full purges (0.9 s). 36 of the normal
@@ -1157,21 +1177,15 @@ still emits them.
 `__sF` for stdin/stdout/stderr, ...) and only imports `fopen`, `_fileno` and `setvbuf` from the system libc. On
 Android that is consistent. Here `fopen` returns a newlib `FILE`, so the engine's own `_fseeko` crashed following bionic's
 `FILE` internals (first crash: data abort at address `0xe` inside `fseek` called from `unzOpen2`, the bundled minizip
-that opens the `.obb`). `source/reimpl/ue3_stdio.c` hooks those engine functions at startup and forwards them to the
+that opens the `.obb`). `source/libc/ue3_stdio.c` hooks those engine functions at startup and forwards them to the
 Vita's stdio. If another libc function is found to be defined inside the engine and to touch `FILE` objects, add it there.
-
-## Why `USE_SCELIBC_IO` is OFF
-
-The engine calls `fopen()`, then `_fileno()` on the result, then reads with plain `read()`/`lseek()`/`fstat()`. With the
-boilerplate's default (SceLibc IO), `fopen`/`_fileno` come from SceLibc while `read`/`lseek` come from newlib, and the two
-number file descriptors differently. Keeping everything in newlib makes the descriptors consistent. This option is
-cached by CMake, so delete `build/` after changing it.
 
 ## How it works
 
-`main.c` -> `soloader_init_all()` loads and relocates the library, then `JNI_OnLoad` runs. The engine registers its
-40 Java->native entry points with `RegisterNatives` (FalsoJNI ignores that, so `engine.c` captures them) and caches
-66 native->Java callbacks. `engine_start()` then calls the entry points in the order `BaseUE3JavaApp` does:
+`main.c` -> `soloader_init_all()` (`util/init.c`) loads and relocates the library, resolves its imports
+(`android/dynlib.c`) and installs the loader's hooks (`android/patch.c`), then `JNI_OnLoad` runs. The engine registers
+its 40 Java->native entry points with `RegisterNatives` (FalsoJNI ignores that, so `android/engine.c` captures them)
+and caches 66 native->Java callbacks. `engine_start()` then calls the entry points in the order `BaseUE3JavaApp` does:
 
 | Java (APK) | Here |
 |---|---|
@@ -1182,37 +1196,38 @@ cached by CMake, so delete `build/` after changing it.
 
 After `Initialize` the engine runs its own game and render threads and calls `JavaCallback_swapBuffers` every frame.
 Touch input goes in through `NativeCallback_InputEvent(type, x, y, id, time)` (type = Android MotionEvent action).
+All file I/O goes through newlib: the engine calls `fopen()`, then `_fileno()` on the
+result, then reads with plain `read()`/`lseek()`/`fstat()`, so every descriptor must come from one libc.
 
-## Where to change things
+## Source layout
 
-| What | File |
+| Folder | What |
 |---|---|
-| Language, device identity, screen size, heap size, reported RAM/cores, file names | `source/dm_config.h` |
-| Callbacks that do real work (EGL, paths, local values, movie stub) | `source/java_impl.c` |
-| Logging (log.txt) | `source/utils/logger.c` |
-| Startup sequence and native capture | `source/engine.c` |
-| Missing libc functions (sysconf, sysinfo, uname, ...) | `source/reimpl/ue3_compat.c` |
-| Symbol table | `source/dynlib.c` |
+| `main.c`, `config.c`, `game_info.h` | entry point; the settings reader (`config.txt`); fixed values (identity, sizes, file names, build) |
+| `android/` | the activity (`engine.c`), Java callbacks (`java_impl.c`), the import table (`dynlib.c`), patches, EGL; `java_tables.c`, `java_callbacks.h`, `engine_natives.[ch]` are generated |
+| `hooks/` | `hook.c` (the trampoline), the engine log, the load profiler and clean-up skipping, text scaling, game state |
+| `libc/` | what the engine expects from bionic: files, pthreads, time, errno, its own stdio |
+| `storage/` | .obb streams and descriptors, package cache and prefetch, texture cache and prefetch, saves, memory valve, I/O stats |
+| `audio/` | OpenSL ES sound effects and the mixer; music and dialogue |
+| `video/` | movies |
+| `input/` | touch screen; physical controls and their cursor |
+| `gfx/` | vitaGL start-up, shaders, extensions; fixes for how the game draws |
+| `util/` | log, watchdog and performance lines, crash handler, start-up, fatal errors |
 
 `java_tables.c`, `java_callbacks.h`, `engine_natives.[ch]` are **generated** from the library:
 `python3 tools/gen_java.py` (tables extracted by `tools/extract_jni_tables.py`, needs `pyelftools`).
-To implement a callback, define `jcb_<JavaMethodName>` in `java_impl.c`; it overrides the generated weak stub.
+To implement a callback, define `jcb_<JavaMethodName>` in `android/java_impl.c`; it overrides the generated weak stub.
 
-## Not implemented yet
+## Not implemented
 
-* **Movies** (`.m4v` inside the .obb): `StartVideo` logs and reports the movie finished at once.
-* The Java-side sound effects (`LoadSoundFile`/`PlaySound`, unused by this game: it uses OpenSL ES).
-* **Physical buttons and sticks** (`controls_handler_key/analog` are empty): touch only.
-* **On-screen keyboard** callbacks, and everything online (Tapjoy, Flurry, billing, ads): logged no-ops.
+* The Java-side sound effects (`LoadSoundFile`/`PlaySound`): unused by this game, which uses OpenSL ES.
+* **On-screen keyboard** callbacks, and everything online (Tapjoy, Flurry, ads): logged no-ops or played offline.
 * `SetFixedSizeScale` is logged and ignored (rendering stays 960x544).
 
 ## Notes for debugging
 
 * Shaders are plain-text GLSL assembled by the engine (`ES2ShaderSourceFromKeys`); vitaGL caches the compiled ones in
-  `ux0:data/darkmeadow/shader_cache/` (see "Shader cache").
-  Character skinning (computed bone-matrix index) is the likeliest thing to need attention.
+  `ux0:data/darkmeadow/shader_cache/`.
 * Textures are PVRTC (`CookedAndroid_PVRTC`); the other cooked folders in the .obb are empty.
 * The engine reads an optional `UE3CommandLine.txt` from `ux0:data/darkmeadow/` for engine switches.
-* `dlsym_soloader` in the boilerplate returned the address of the table slot; it now returns the symbol itself
-  (needed for the engine's OpenSL ES lookups).
-* `sysconf` was a stub returning 0; it now reports page size and core count.
+* Engine offsets in `[stall]`, `[busy]` and `[stack]` lines resolve with `python3 tools/resolve_addr.py`.

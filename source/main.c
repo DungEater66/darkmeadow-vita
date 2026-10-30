@@ -8,36 +8,32 @@
  *
  * After that the engine runs on its own threads; this thread only has to stay out of the way.
  */
-#include "utils/init.h"
-#include "utils/glutil.h"
-#include "utils/logger.h"
-#include "reimpl/controls.h"
-#include "dm_config.h"
-#include "engine.h"
-#include "utils/crash.h"
-#include "utils/watchdog.h"
-#include "reimpl/opensl.h"
-#include "song.h"
-#include "padinput.h"
-
-#include <psp2/io/stat.h>
-#include <psp2/kernel/threadmgr.h>
 #include <falso_jni/FalsoJNI.h>
 #include <so_util/so_util.h>
+#include <psp2/io/stat.h>
+#include <psp2/kernel/threadmgr.h>
+
+#include "android/engine.h"
+#include "audio/opensl.h"
+#include "audio/song.h"
+#include "config.h"
+#include "game_info.h"
+#include "input/padinput.h"
+#include "input/touch.h"
+#include "util/crash.h"
+#include "util/init.h"
+#include "util/logger.h"
+#include "util/watchdog.h"
 
 int _newlib_heap_size_user = DM_HEAP_MB * 1024 * 1024;
-
-#ifdef USE_SCELIBC_IO
-int sceLibcHeapSize = 4 * 1024 * 1024;
-#endif
 
 so_module so_mod;
 
 /* Poll the Vita's touch screen and buttons ~120 times per second, independently of the engine's frame rate. */
 static int controls_thread(SceSize args, void *argp) {
     while (1) {
-        controls_poll();
-        padinput_poll();   /* r59: sticks and buttons as touches */
+        touch_poll();
+        padinput_poll();   /* sticks and buttons as touches */
         sceKernelDelayThread(8333);
     }
     return 0;
@@ -45,6 +41,7 @@ static int controls_thread(SceSize args, void *argp) {
 
 int main() {
     crash_init();
+    config_load();
     l_info("Dark Meadow loader %s, built " __DATE__ " " __TIME__, DM_LOADER_BUILD);
     soloader_init_all();
     engine_install_jni_hooks();
@@ -74,21 +71,4 @@ int main() {
 
     sceKernelExitDeleteThread(0);
     return 0;
-}
-
-/* ---- input ----------------------------------------------------------------------------------- */
-
-void controls_handler_touch(int32_t id, float x, float y, ControlsAction action) {
-    /* Android MotionEvent actions: 0 = down, 1 = up, 2 = move */
-    int a = (action == CONTROLS_ACTION_DOWN) ? 0 : (action == CONTROLS_ACTION_UP) ? 1 : 2;
-    if (a == 0 && padinput_log_touches) l_info("[touch] finger down at (%d, %d)", (int)x, (int)y);   /* DM_LOG_TOUCHES */
-    engine_touch(a, id, x, y);
-}
-
-void controls_handler_key(int32_t keycode, ControlsAction action) {
-    /* TODO: map buttons (BACK, START, ...) to NativeCallback_KeyEvent */
-}
-
-void controls_handler_analog(ControlsStickId which, float x, float y, ControlsAction action) {
-    /* TODO: drive the engine's on-screen virtual sticks from the analog sticks */
 }

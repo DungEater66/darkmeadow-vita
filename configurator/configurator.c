@@ -1,10 +1,10 @@
 /*
  * The Dark Meadow - configurator (companion app in the same LiveArea bubble).
  *
- * Started from the "Settings" button on the game's LiveArea page: the loader (source/utils/init.c) sees the "-config"
+ * Started from the "Settings" button on the game's LiveArea page: the loader (source/util/init.c) sees the "-config"
  * LiveArea parameter and runs app0:/configurator.bin instead of the game. It edits ux0:data/darkmeadow/config.txt:
  * only the settings listed here are touched (a setting left at its default is removed from the file), every other
- * line - comments, test switches, button positions - is kept as it is.
+ * line is kept as it is.
  *
  * Controls: up/down choose, left/right change, Cross toggles / runs an action, Triangle resets the setting under the
  * cursor, Start saves and starts the game, Circle quits (asks to save if something changed).
@@ -32,7 +32,7 @@
 /* ---------------------------------------------------------------------------------------------------------------- */
 /* settings                                                                                                          */
 
-enum { T_HEADER, T_BOOL, T_INT, T_FLOAT, T_CHOICE, T_ACTION, T_KEYS };   /* r65: T_KEYS = buttons, assigned by pressing them */
+enum { T_HEADER, T_BOOL, T_INT, T_FLOAT, T_CHOICE, T_ACTION, T_KEYS };   /* T_KEYS = buttons, assigned by pressing them */
 enum { A_RESET_ALL = 1, A_RESET_PREFETCH };
 
 typedef struct {
@@ -48,13 +48,13 @@ typedef struct {
     float val;              /* current (T_CHOICE: index) */
 } item_t;
 
-static const char *const msaa_names[] = { "4x", "2x", "Off" };   /* r63: 4x is the default (first = default) */
+static const char *const msaa_names[] = { "4x", "2x", "Off" };   /* 4x is the default (first = default) */
 static const char *const msaa_vals[] = { "4", "2", "0" };
 static const char *const fps_names[] = { "60 fps", "30 fps" };
 static const char *const fps_vals[] = { "60", "30" };
 static const char *const movie_names[] = { "On", "Off" };
 static const char *const movie_vals[] = { "Startup", "off" };
-/* r65: button remapping (DM_KEY_*): a T_KEYS item's value is a set of buttons (bit i = key_mask[i]), assigned by
+/* button remapping (DM_KEY_*): a T_KEYS item's value is a set of buttons (bit i = key_mask[i]), assigned by
  * selecting it, pressing Cross and then the button (or, for an item that allows several, the buttons together) */
 static const char *const key_names[] = { "Cross", "Circle", "Square", "Triangle", "D-pad up", "D-pad down", "D-pad left",
                                          "D-pad right", "L", "R", "Start", "Select" };
@@ -107,7 +107,7 @@ static item_t items[] = {
 
     { T_HEADER, NULL, "Diagnostics" },
     { T_BOOL, "DM_UE3_LOG", "Engine log", "Copy the engine's own messages into log.txt.", 1 },
-    { T_BOOL, "DM_LOG_TOUCHES", "Log touches", "Write every touch position to log.txt (to place buttons).", 0 },
+    { T_BOOL, "DM_LOG_TOUCHES", "Log touches", "Write where each finger goes down on the touch screen to log.txt.", 0 },
 
     { T_HEADER, NULL, "Reset" },
     { T_ACTION, NULL, "Forget recorded textures and packages", "Delete texprefetch.bin and pkgprefetch.txt: both prefetches start recording again from scratch.", 0, 0, 0, 0, NULL, NULL, 0, A_RESET_PREFETCH },
@@ -118,7 +118,7 @@ static item_t items[] = {
 static int dirty;
 static char status[160];
 
-static void set_default(item_t *it) { it->val = it->def; }   /* r65: T_CHOICE: def is the index (0 for most) */
+static void set_default(item_t *it) { it->val = it->def; }   /* T_CHOICE: def is the index (0 for most) */
 
 static int is_default(const item_t *it) {
     if (it->type == T_CHOICE) return (int)it->val == (int)it->def;
@@ -365,7 +365,7 @@ static void text_wrap(float x, float y, int cols, int maxl, const char *s, uint3
 static int sel = 1, top = 0;
 static int confirm_quit;
 
-static int capture, cap_frames;   /* r65: waiting for the button(s) of a T_KEYS item */
+static int capture, cap_frames;   /* waiting for the button(s) of a T_KEYS item */
 static uint32_t cap_mask, cap_seen;
 
 static void draw_page(void) {
@@ -548,7 +548,7 @@ int main(void) {
 
         item_t *it = &items[sel];
         if (pressed) status[0] = 0;
-        if (capture) {   /* r65: assigning buttons */
+        if (capture) {   /* assigning buttons */
             uint32_t raw = pad.buttons;
             int m = 0;
             for (int k = 0; k < NKEYS; k++) if (raw & key_mask[k]) m |= 1 << k;

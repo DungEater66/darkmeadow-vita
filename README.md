@@ -34,8 +34,8 @@ and `make`. On Windows use WSL.
    export VITASDK=/usr/local/vitasdk-softfp      # where you installed it
    export PATH="$VITASDK/bin:$PATH"
    ```
-2. Make sure it has these libraries (install missing ones with `vdpm`): OpenSLES, sndfile, mp3lame, mpg123, opus,
-   vorbis, ogg, vorbisenc, vorbisfile, FLAC, vitashark, SceShaccCgExt, mathneon.
+2. Make sure it has these libraries (install missing ones with `vdpm`): mpg123, zlib, vitashark, SceShaccCgExt,
+   mathneon.
 3. Install a current kubridge into the SDK:
    ```sh
    git clone https://github.com/bythos14/kubridge
@@ -80,7 +80,7 @@ The loader writes **`ux0:data/darkmeadow/log.txt`** (with a `Profile` or `Debug`
 In the settings app, under **Diagnostics**:
 
 * **Engine log**: also copy the engine's own messages into `log.txt` (on by default).
-* **Log touches**: write every touch position, to help place buttons.
+* **Log touches**: write where each finger goes down on the touch screen.
 
 `log.txt` is what to attach when reporting a problem.
 
@@ -114,8 +114,6 @@ settings app (select it, press Cross, then press the new button).
     its messages go to `log.txt`
   * [FalsoJNI](https://github.com/v-atamanenko/FalsoJNI), MIT (`lib/falso_jni/LICENSE`)
   * [so_util](https://github.com/Rinnegatamante/so_util), MIT (`lib/so_util/LICENSE`)
-  * [FalsoNDK](https://github.com/elliencode/FalsoNDK), Apache-2.0 (`lib/falso_ndk/LICENSE`)
-  * fios and libc_bridge from the boilerplate (Andy Nguyen), and SHA-1 by Brad Conte (public domain)
 * *Dark Meadow: The Pact* is © Phosphor Games. None of its files are part of this repository.
 
 The detailed history of the port is in [DEVLOG.md](DEVLOG.md).
