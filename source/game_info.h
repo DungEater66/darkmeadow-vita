@@ -6,7 +6,7 @@
 #define DM_GAME_INFO_H
 
 /* Shown at the top of log.txt, so it is clear which loader build produced a log. Bump on every change. */
-#define DM_LOADER_BUILD "r75 (2026-10-30, source cleaned up)"
+#define DM_LOADER_BUILD "r76 (2026-10-30, source cleaned up; link fixed)"
 
 /* Identity (AndroidManifest.xml). The expansion files are named main/patch.<VERSION_CODE>.<PACKAGE>.obb */
 #define DM_PACKAGE_NAME "com.phosphorgames.DarkMeadow"

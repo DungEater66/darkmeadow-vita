@@ -4,6 +4,6 @@
 
 #include <vitaGL.h>
 
-EGLBoolean eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor);
+EGLBoolean eglInitialize_soloader(EGLDisplay dpy, EGLint *major, EGLint *minor);
 
 #endif

@@ -249,7 +249,7 @@ so_default_dynlib default_dynlib[] = {
             { "vfprintf", (uintptr_t)&vfprintf },
         // EGL
         { "eglGetDisplay", (uintptr_t)&eglGetDisplay },
-        { "eglInitialize", (uintptr_t)&eglInitialize },
+        { "eglInitialize", (uintptr_t)&eglInitialize_soloader },
         // OpenGL
         { "glActiveTexture", (uintptr_t)&glActiveTexture },
         { "glAttachShader", (uintptr_t)&glAttachShader_soloader },

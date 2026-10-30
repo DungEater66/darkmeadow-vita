@@ -678,6 +678,13 @@ as `[mem] engine malloc of N bytes failed: caches gave back K KB, retry succeede
 
 The `[io]` line adds `texture-data cache served N KB, holds H KB of L`.
 
+## r76: r75 links
+
+r75 did not link. With its one C++ file gone (the asset manager), the loader links as C, and `stdc++` came before
+`vitaGL` on the link line, so vitaGL's shader preprocessor (C++) found no `std::string` / `std::list` code; it is now
+after `vitaGL`. And with the loader's own EGL functions gone, vitaGL's `egl.o` is pulled in for `eglGetDisplay`, whose
+`eglInitialize` clashed with the loader's: the loader's is now `eglInitialize_soloader` in the import table.
+
 ## r75: source cleaned up
 
 No change to what the game does; the source is reorganised so it reads as a whole:

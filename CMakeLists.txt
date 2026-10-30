@@ -170,10 +170,10 @@ target_include_directories(${CMAKE_PROJECT_NAME}
 target_link_libraries(${CMAKE_PROJECT_NAME}
                       -Wl,--whole-archive pthread -Wl,--no-whole-archive
                       mpg123
-                      stdc++
                       vitaGL
                       vitashark
                       SceShaccCgExt
+                      stdc++
                       taihen_stub
                       SceShaccCg_stub
                       z

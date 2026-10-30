@@ -6,7 +6,7 @@
 
 #include "gfx/glutil.h"
 
-EGLBoolean eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor) {
+EGLBoolean eglInitialize_soloader(EGLDisplay dpy, EGLint *major, EGLint *minor) {
     (void)dpy;
     gl_init();
     if (major) *major = 2;
