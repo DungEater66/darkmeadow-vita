@@ -7,10 +7,10 @@ physical controls.
 **The game is not included.** You need your own copy of the Android version, 1.4.6.4 PowerVR (version code 69).
 
 <p align="center">
-  <img src="titlescreen.png" width="350">
-  <img src="screenshot1.webp" width="350">
-  <img src="screenshot2.webp" width="350">
-  <img src="screenshot3.webp" width="350">
+  <img src="titlescreen.png" width="400">
+  <img src="screenshot1.webp" width="400">
+  <img src="screenshot2.webp" width="400">
+  <img src="screenshot3.webp" width="400">
 </p>
 
 
