@@ -4,7 +4,7 @@ A loader that runs the Android version of *Dark Meadow: The Pact* on the PS Vita
 library and provides what it expects from Android: graphics through vitaGL, sound, music and movies, touch, and
 physical controls.
 
-**The game is not included.** You need your own copy of the Android version, 1.4.6.4 (version code 69).
+**The game is not included.** You need your own copy of the Android version, 1.4.6.4 PowerVR (version code 69).
 
 ## Required files
 
@@ -71,6 +71,17 @@ cd .. && tools/convert_movies.sh m4v movies
 
 Copy `movies/*.mp4` to `ux0:data/darkmeadow/movies/`. Without them the game runs normally and skips its movies.
 
+## Shader cache (optional)
+
+The first time each effect appears, its shaders are compiled on the Vita, which causes short stutters on a first
+playthrough. The releases include `shader_cache.zip`, a cache made by playing through the game:
+
+1. Extract it into `ux0:data/darkmeadow/`, so that you get `ux0:data/darkmeadow/shader_cache/v2/`.
+2. When updating to a newer release, extract its `shader_cache.zip` over the old one and allow overwriting.
+
+Shaders that changed in a new release are compiled again as needed, and stale files are ignored, so an older cache
+never causes problems. Deleting `shader_cache/` also works: it is rebuilt as you play.
+
 ## Settings and logs
 
 Tap **Settings** on the game's LiveArea to open the settings app. It covers the controls (speeds, button
@@ -107,8 +118,14 @@ settings app ("Physical controls"). They switch automatically with what is on sc
 | Start | game menu | game menu | game menu | back |
 | Select | physical controls off / on | same | same | same |
 
-In cutscenes only Start works. Any button or a tap skips a movie. Every action can be moved to another button in the
+In in-engine cutscenes, only Start works. Any button or a tap skips a movie. Every action can be moved to another button in the
 settings app (select it, press Cross, then press the new button).
+
+## AI Usages
+
+This port was vibe-coded: the loader's code was written by an AI, while every build was tested and played on
+a real PS Vita and the logs fed back. Expect the code to read like Spaghetti code even with comments.
+Bug reports with a `log.txt` from a `Profile` build are the most useful, but the Release build can also print errors.
 
 ## Credits
 
