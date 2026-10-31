@@ -43,13 +43,14 @@ and `make`. On Windows use WSL.
    ```
 4. Build:
    ```sh
-   cmake -S . -B build -DCMAKE_BUILD_TYPE=Profile
+   cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
    cmake --build build -j4
    ```
    The result is `build/DarkMeadow.vpk`. Install it with VitaShell.
 
-Build types: `Profile` (recommended: optimised, writes a useful log), `Release` (optimised, logs errors only), `Debug`
-(slow, full logging). Delete the build folder after changing `VITASDK` or the build type.
+Build types: `Release` (optimised, logs errors only), `Profile` (just as optimised, and writes a full log: use it
+when reporting a problem), `Debug` (slow, full logging). Delete the build folder after changing `VITASDK` or the build
+type.
 
 | Error | Fix |
 |---|---|
@@ -76,7 +77,7 @@ Tap **Settings** on the game's LiveArea to open the settings app. It covers the 
 remapping, right stick camera), MSAA, the frame-rate limit, the opening movie and some performance options.
 Start saves and launches the game; Circle quits.
 
-The loader writes **`ux0:data/darkmeadow/log.txt`** (with a `Profile` or `Debug` build; `Release` logs errors only).
+The loader writes **`ux0:data/darkmeadow/log.txt`**. A `Release` build logs errors only; build `Profile` for a full log.
 In the settings app, under **Diagnostics**:
 
 * **Engine log**: also copy the engine's own messages into `log.txt` (on by default).
@@ -86,7 +87,11 @@ In the settings app, under **Diagnostics**:
 
 ## Controls
 
-The touch screen works as on Android everywhere. The buttons switch automatically with what is on screen:
+The touch screen works as on Android everywhere.
+
+The physical controls are **experimental**: the game was made for touch only, so the buttons and sticks are played as
+touches, and they may not always pick the right controls for what is on screen. They can be turned off in the
+settings app ("Physical controls"). They switch automatically with what is on screen:
 
 | | Exploring | Sword fight | Crossbow fight | Menus |
 |---|---|---|---|---|
@@ -104,6 +109,17 @@ The touch screen works as on Android everywhere. The buttons switch automaticall
 
 In cutscenes only Start works. Any button or a tap skips a movie. Every action can be moved to another button in the
 settings app (select it, press Cross, then press the new button).
+
+## Credits
+
+* **Phosphor Games** for *Dark Meadow: The Pact*.
+* **Andy Nguyen (TheFloW)** for the original so-loader approach, and for HENkaku and VitaShell.
+* **Rinnegatamante** for vitaGL, so_util, vitaShaRK and ShaRKBR33D, and for many so-loader ports to learn from.
+* **Volodymyr Atamanenko** for [soloader-boilerplate](https://github.com/v-atamanenko/soloader-boilerplate), which this
+  port is built on, and for FalsoJNI.
+* **bythos14** for kubridge.
+* The **VitaSDK** team and contributors.
+* The **mpg123** and **zlib** projects, used for music and package data.
 
 ## Licenses
 
